@@ -1,0 +1,189 @@
+:root{
+  --bg:#0b0b0c;
+  --fg:#f2f0ea;
+  --muted:#7b7e82;
+  --olive:#5b614c;
+  --accent:#f2a400;
+  --line:rgba(242,240,234,.12);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:var(--bg);
+  color:var(--fg);
+  letter-spacing:.2px;
+}
+
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.85}
+
+.topbar{
+  position:sticky; top:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px;
+  background:rgba(11,11,12,.86);
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--line);
+  z-index:10;
+}
+.brand{
+  font-weight:700;
+  letter-spacing:1.5px;
+  font-size:12px;
+}
+.nav{display:flex; gap:16px; align-items:center}
+.nav a{font-size:12px; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted)}
+.nav a:hover{color:var(--fg)}
+
+.hero{
+  min-height:78vh;
+  display:grid;
+  place-items:center;
+  padding:40px 20px;
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(800px 400px at 20% 20%, rgba(242,164,0,.08), transparent 60%),
+    radial-gradient(900px 500px at 80% 30%, rgba(91,97,76,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 50%);
+}
+
+.heroInner{max-width:920px; width:100%}
+.kicker{
+  margin:0 0 10px;
+  font-size:11px;
+  letter-spacing:2.2px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.headline{
+  margin:0;
+  font-size:56px;
+  line-height:1;
+  letter-spacing:3px;
+}
+.subhead{
+  margin:14px 0 10px;
+  max-width:70ch;
+  color:var(--fg);
+  font-size:14px;
+  line-height:1.7;
+}
+.quote{
+  margin:0 0 22px;
+  color:var(--muted);
+  font-size:13px;
+  letter-spacing:.6px;
+}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+.heroActions{display:flex; gap:12px; flex-wrap:wrap}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  background:rgba(242,240,234,.06);
+  border-radius:14px;
+  font-size:12px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+.btn.ghost{
+  background:transparent;
+}
+.btn:hover{
+  border-color:rgba(242,240,234,.22);
+}
+
+.section{padding:42px 20px}
+.sectionHead{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  max-width:920px;
+  margin:0 auto 18px;
+}
+.section h2{
+  margin:0;
+  font-size:16px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+}
+
+.grid{
+  max-width:920px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+}
+.tile{
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(242,240,234,.03);
+}
+.tile img{width:100%; height:100%; object-fit:cover; display:block}
+.ph{
+  height:240px;
+  display:grid;
+  place-items:center;
+  color:rgba(242,240,234,.35);
+  letter-spacing:2px;
+  font-size:12px;
+  border-bottom:1px solid var(--line);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.03), transparent 60%),
+    radial-gradient(420px 220px at 30% 30%, rgba(242,164,0,.06), transparent 60%);
+}
+figcaption{
+  padding:12px 12px 14px;
+  font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.mantras{
+  max-width:920px;
+  margin:0 auto;
+  padding:0;
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:10px;
+}
+.mantras li{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px 12px;
+  background:rgba(242,240,234,.02);
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.mantras li strong{color:var(--fg)}
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:18px 20px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+}
+
+@media (max-width:720px){
+  .headline{font-size:40px}
+  .grid{grid-template-columns:1fr}
+  .mantras{grid-template-columns:1fr}
+  .footer{flex-direction:column}
+}

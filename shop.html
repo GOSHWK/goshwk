@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop — GOSHWK COLLECTIVE</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">GOSHWK COLLECTIVE</a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="section">
+    <div class="sectionHead">
+      <h2>Shop</h2>
+      <p class="small muted">ASCENT drop — minimal preorder flow.</p>
+    </div>
+
+    <div class="grid shopGrid">
+      <article class="card product">
+        <div class="productMedia">
+          <img id="mainProductImg" class="productMain"
+               src="assets/ascent-tee-front.png"
+               alt="GOSHWK ASCENT TEE front" />
+
+        
+
+            <button class="thumb" type="button"
+                    data-img="assets/ascent-tee-back.png"
+                    aria-label="Back view">
+              <img src="assets/ascent-tee-back.png" alt="Back thumbnail" />
+            </button>
+          </div>
+        </div>
+
+        <div class="cardBody">
+          <div class="row">
+            <span class="name">ASCENT TEE</span>
+            <span class="price">$55 AUD</span>
+          </div>
+
+          <p class="desc muted">
+            Heavyweight. Matte finish. Built to ascend.
+          </p>
+
+          <div class="row">
+            <label class="muted small" for="sizeSelect">Size</label>
+            <select id="sizeSelect" class="select" data-size>
+              <option>S</option>
+              <option>M</option>
+              <option>L</option>
+              <option>XL</option>
+            </select>
+          </div>
+
+          <a class="btn" href="#"
+             id="preorderBtn"
+             data-product="ASCENT TEE"
+             data-price="$80 AUD">PREORDER</a>
+
+          <p class="small muted" style="margin:12px 0 0;">
+            Preorders are submitted via email confirmation.
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <p class="small muted" style="max-width:920px;margin:18px auto 0;">
+      Palette: deep black/charcoal, bone/off-white, concrete grey, muted olive.
+      Controlled orange/yellow accents only. Matte only.
+    </p>
+  </main>
+
+  <footer class="footer">
+    <span class="muted">© <span id="year"></span> GOSHWK COLLECTIVE</span>
+    <span class="muted">ASCENT &gt; COMFORT</span>
+  </footer>
+
+  <script>
+    // ====== SETTINGS (edit this) ======
+    const EMAIL_TO = "spencer.j.johnstone@gmail.com"; // <-- change to your email
+
+    // ====== Footer year ======
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ====== Image switcher (front/back) ======
+    const mainImg = document.getElementById("mainProductImg");
+    const thumbs = document.querySelectorAll(".thumb");
+    thumbs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        thumbs.forEach(t => t.classList.remove("isActive"));
+        btn.classList.add("isActive");
+        mainImg.src = btn.dataset.img;
+      });
+    });
+
+    // ====== Preorder mailto (FREE checkout method) ======
+    function buildMailto(product, price, size) {
+      const subject = encodeURIComponent(`Preorder — ${product} (${size})`);
+      const body = encodeURIComponent(
+`Product: ${product}
+Size: ${size}
+Price: ${price}
+
+Name:
+Shipping Address:
+Phone:
+
+Notes:`
+      );
+      return `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
+    }
+
+    document.getElementById("preorderBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      const product = e.currentTarget.getAttribute("data-product") || "Item";
+      const price = e.currentTarget.getAttribute("data-price") || "";
+      const size = document.querySelector("[data-size]")?.value || "One Size";
+      window.location.href = buildMailto(product, price, size);
+    });
+  </script>
+</body>
+</html>
