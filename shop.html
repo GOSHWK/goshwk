@@ -1,5 +1,3 @@
-
-    
 <!doctype html>
 <html lang="en">
 <head>
@@ -38,20 +36,13 @@
       justify-content:center;
     }
     .mainMedia img { width:100%; height:100%; object-fit:cover; display:block; }
-    .thumbRow { display:flex; gap:10px; margin-top:12px; }
+    .thumbRow { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
     .thumbBtn {
-      width: 84px;
-      aspect-ratio: 1 / 1;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#0f0f12;
-      padding:0;
-      overflow:hidden;
-      cursor:pointer;
-      opacity:.85;
-      transition: opacity .15s ease, transform .15s ease, border-color .15s ease;
+      width: 84px; aspect-ratio: 1 / 1;
+      border-radius:14px; border:1px solid var(--line);
+      background:#0f0f12; padding:0; overflow:hidden;
+      cursor:pointer; opacity:.85;
     }
-    .thumbBtn:hover { opacity: 1; transform: translateY(-1px); }
     .thumbBtn.active { border-color:#3a3a44; opacity:1; }
     .thumbBtn img { width:100%; height:100%; object-fit:cover; display:block; }
 
@@ -63,31 +54,19 @@
       border: 1px solid var(--line); background:#0f0f12; color:var(--text);
       outline:none;
     }
-    select:focus, input:focus, textarea:focus { border-color:#3a3a44; }
     .two { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
 
     .price { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding: 10px 0 0; }
     .price strong { font-size: 22px; }
     .pill { font-size:12px; color:#0b0b0c; background:#f4f4f6; padding:6px 10px; border-radius:999px; }
-    .btn {
-      cursor:pointer; background:#f4f4f6; color:#0b0b0c; border:none; font-weight:700;
-      padding: 13px 14px; border-radius: 14px;
-    }
+    .btn { cursor:pointer; background:#f4f4f6; color:#0b0b0c; border:none; font-weight:700; padding: 13px 14px; border-radius: 14px; }
     .btn:disabled { opacity:.55; cursor:not-allowed; }
     .ghost { background:transparent; border:1px solid var(--line); color:var(--text); font-weight:600; }
     .note { font-size:12px; color:var(--muted); margin-top:10px; line-height:1.5; }
     .hr { height:1px; background:var(--line); margin:16px 0; }
-
-    /* Modal */
-    .modalBack { position:fixed; inset:0; background: rgba(0,0,0,.62); display:none; align-items:center; justify-content:center; padding:18px; }
-    .modal { width:min(720px, 100%); border-radius:18px; background:var(--card); border:1px solid var(--line); overflow:hidden; }
-    .modalHead { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
-    .modalHead b { font-size:14px; letter-spacing:.3px; }
-    .x { background:transparent; border:1px solid var(--line); width:auto; padding:8px 10px; border-radius:12px; cursor:pointer; }
-    .modalBody { padding:16px; }
-    .ok { color:#b7ffbf; font-size:13px; }
-    .err { color:#ffb7b7; font-size:13px; }
+    .ok { color:#b7ffbf; }
+    .err { color:#ffb7b7; }
   </style>
 </head>
 <body>
@@ -122,14 +101,10 @@
               <h1 id="productName">GOSHWK OG TEE</h1>
               <p class="sub" id="productDesc">Heavyweight box tee. Built for daily wear. Minimal, sharp, durable.</p>
             </div>
-            <span class="pill" id="stockPill">Print-on-demand</span>
+            <span class="pill">Print-on-demand</span>
           </div>
-
           <div class="hr"></div>
-
-          <div class="sub">
-            This item is fulfilled by Printful. Shipping + taxes are calculated from your address.
-          </div>
+          <div class="sub">Fulfilled by Printful. Shipping + taxes depend on your address.</div>
         </div>
       </div>
 
@@ -142,14 +117,16 @@
 
           <label for="size">Size</label>
           <select id="size">
-            <option value="">Loading sizes…</option>
+            <option value="">Select size</option>
+            <option>S</option><option>M</option><option>L</option><option>XL</option>
           </select>
 
           <div class="two">
             <div>
               <label for="color">Color</label>
               <select id="color">
-                <option value="">Loading colors…</option>
+                <option value="">Select color</option>
+                <option>Black</option><option>White</option>
               </select>
             </div>
             <div>
@@ -163,68 +140,8 @@
           <button class="btn" id="buyBtn" disabled>Pre-order</button>
           <button class="btn ghost" id="refreshBtn" style="margin-top:10px;">Refresh product data</button>
 
-          <div class="note" id="statusNote">Loading product data from Printful…</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modalBack" id="modalBack">
-    <div class="modal">
-      <div class="modalHead">
-        <b>Checkout — GOSHWK OG TEE</b>
-        <button class="x" id="closeModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <div class="two">
-          <div>
-            <label for="fullName">Full name</label>
-            <input id="fullName" placeholder="Spencer Johnstone" />
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" type="email" placeholder="you@email.com" />
-          </div>
-        </div>
-
-        <label for="address1">Address line 1</label>
-        <input id="address1" placeholder="123 Street Name" />
-
-        <label for="address2">Address line 2 (optional)</label>
-        <input id="address2" placeholder="Apt, suite, etc." />
-
-        <div class="two">
-          <div>
-            <label for="city">City</label>
-            <input id="city" placeholder="Sydney" />
-          </div>
-          <div>
-            <label for="state">State/Region</label>
-            <input id="state" placeholder="NSW" />
-          </div>
-        </div>
-
-        <div class="two">
-          <div>
-            <label for="zip">Postcode</label>
-            <input id="zip" placeholder="2000" />
-          </div>
-          <div>
-            <label for="country">Country code (2 letters)</label>
-            <input id="country" value="AU" />
-          </div>
-        </div>
-
-        <label for="notes">Notes (optional)</label>
-        <textarea id="notes" rows="3" placeholder="Anything we should know…"></textarea>
-
-        <div class="hr"></div>
-
-        <button class="btn" id="placeOrderBtn">Create order</button>
-        <div class="note" id="orderMsg"></div>
-        <div class="note" style="margin-top:12px;">
-          This creates a <b>draft order</b> in Printful. You can review and confirm it in your Printful dashboard.
+          <div class="note" id="statusNote">Status: loading…</div>
+          <div class="note" id="debugNote" style="opacity:.9;"></div>
         </div>
       </div>
     </div>
@@ -232,9 +149,9 @@
 
   <script>
     // =========================
-    // 1) SET YOUR IMAGE FILES
+    // 1) YOUR 3 IMAGE FILES
+    // Put them in /assets and match names EXACTLY (case sensitive)
     // =========================
-    // Put your 3 images inside /assets and set the filenames below:
     const PRODUCT_IMAGES = [
       "assets/IMAGE_1_HERE.jpg",
       "assets/IMAGE_2_HERE.jpg",
@@ -242,36 +159,43 @@
     ];
 
     // =========================
-    // 2) SET YOUR VERCEL API URL
+    // 2) YOUR VERCEL PROXY DOMAIN
+    // Example: "https://goshwk-api.vercel.app"
     // =========================
-    const API_BASE = "https://goshwk-collective.vercel.app/shop.html";
+    const VERCEL_PROXY = "goshwk-collective-1ei6tfrx0-goshwks-projects.vercel.app";
+
+    // Auto API base:
+    // - if running locally, you can point to localhost
+    // - on GitHub Pages, it will use VERCEL_PROXY
+    const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://localhost:3000"
+      : VERCEL_PROXY;
 
     let product = null;
     let selectedVariant = null;
 
     const el = (id) => document.getElementById(id);
 
-    function money(n, currency="USD") {
-      if (typeof n !== "number") return "—";
-      try { return new Intl.NumberFormat(undefined, { style:"currency", currency }).format(n); }
-      catch { return `$${n.toFixed(2)}`; }
-    }
+    function setStatus(html) { el("statusNote").innerHTML = html; }
+    function setDebug(text) { el("debugNote").textContent = text; }
 
-    function setStatus(text) { el("statusNote").textContent = text; }
-
-    // Gallery init
     function initGallery() {
       const main = el("mainImage");
       const row = el("thumbRow");
-
       const images = PRODUCT_IMAGES.filter(Boolean);
-      if (!images.length) return;
+
+      if (!images.length) {
+        main.alt = "No images set";
+        setStatus('<span class="err">Images not set.</span> Add your filenames in PRODUCT_IMAGES.');
+        return;
+      }
 
       main.src = images[0];
+      main.onerror = () => setStatus('<span class="err">Main image failed to load.</span> Check /assets path + filename case.');
 
       row.innerHTML = images.map((src, i) => `
-        <button class="thumbBtn ${i===0 ? "active" : ""}" data-src="${src}" aria-label="View image ${i+1}">
-          <img src="${src}" alt="GOSHWK OG TEE image ${i+1}">
+        <button class="thumbBtn ${i===0 ? "active" : ""}" data-src="${src}">
+          <img src="${src}" alt="Image ${i+1}">
         </button>
       `).join("");
 
@@ -279,141 +203,85 @@
         const btn = e.target.closest(".thumbBtn");
         if (!btn) return;
         const src = btn.getAttribute("data-src");
-        if (!src) return;
-
         main.src = src;
         [...row.querySelectorAll(".thumbBtn")].forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
       });
     }
 
-    function openModal() { el("modalBack").style.display = "flex"; }
-    function closeModal() { el("modalBack").style.display = "none"; el("orderMsg").textContent = ""; }
-
-    el("closeModal").addEventListener("click", closeModal);
-    el("modalBack").addEventListener("click", (e) => { if (e.target === el("modalBack")) closeModal(); });
-
-    el("refreshBtn").addEventListener("click", () => loadProduct());
-    el("size").addEventListener("change", () => updateVariantFromSelections());
-    el("color").addEventListener("change", () => updateVariantFromSelections());
-
-    el("buyBtn").addEventListener("click", () => {
-      if (!selectedVariant) return;
-      openModal();
-    });
-
-    el("placeOrderBtn").addEventListener("click", async () => {
-      const qty = Math.max(1, parseInt(el("qty").value || "1", 10));
-      if (!selectedVariant) return;
-
-      const payload = {
-        variant_id: selectedVariant.variant_id,
-        quantity: qty,
-        recipient: {
-          name: el("fullName").value.trim(),
-          email: el("email").value.trim(),
-          address1: el("address1").value.trim(),
-          address2: el("address2").value.trim(),
-          city: el("city").value.trim(),
-          state_code: el("state").value.trim(),
-          zip: el("zip").value.trim(),
-          country_code: el("country").value.trim().toUpperCase(),
-        },
-        notes: el("notes").value.trim()
-      };
-
-      const required = ["name","email","address1","city","zip","country_code"];
-      for (const k of required) {
-        if (!payload.recipient[k]) {
-          el("orderMsg").innerHTML = `<span class="err">Missing ${k.replace("_"," ")}.</span>`;
-          return;
-        }
-      }
-
-      el("placeOrderBtn").disabled = true;
-      el("orderMsg").textContent = "Creating order…";
-
-      try {
-        const res = await fetch(`${API_BASE}/api/printful/create-draft-order`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Order failed");
-
-        el("orderMsg").innerHTML =
-          `<span class="ok">Draft order created.</span> ` +
-          (data.order_url ? `Open in Printful: <a href="${data.order_url}" target="_blank" rel="noreferrer" style="text-decoration:underline;">Order #${data.order_id}</a>` : `Order ID: ${data.order_id}`);
-
-      } catch (err) {
-        el("orderMsg").innerHTML = `<span class="err">${err.message}</span>`;
-      } finally {
-        el("placeOrderBtn").disabled = false;
-      }
-    });
-
     function updateVariantFromSelections() {
-      if (!product?.variants?.length) return;
-
       const size = el("size").value;
       const color = el("color").value;
 
-      selectedVariant = product.variants.find(v => v.size === size && v.color === color) || null;
+      if (!product?.variants?.length) {
+        // no API data yet — allow pre-order only when chosen
+        const ok = !!size && !!color;
+        el("buyBtn").disabled = !ok;
+        setStatus(ok
+          ? '<span class="ok">Ready (offline mode).</span> Printful not connected yet.'
+          : 'Pick a size + color.');
+        return;
+      }
 
+      selectedVariant = product.variants.find(v => v.size === size && v.color === color) || null;
       if (selectedVariant) {
-        el("price").textContent = money(selectedVariant.retail_price ?? selectedVariant.price ?? null, selectedVariant.currency || "USD");
+        el("price").textContent = selectedVariant.retail_price || selectedVariant.price || "$—";
         el("buyBtn").disabled = false;
-        setStatus(`Ready — ${selectedVariant.color} / ${selectedVariant.size}`);
+        setStatus(`<span class="ok">Ready.</span> ${selectedVariant.color} / ${selectedVariant.size}`);
       } else {
         el("buyBtn").disabled = true;
-        setStatus("Pick a size + color.");
+        setStatus('<span class="err">Variant not found.</span> Printful sizes/colors don’t match your dropdowns.');
       }
-    }
-
-    function rebuildSelectors() {
-      const sizes = [...new Set(product.variants.map(v => v.size))].filter(Boolean);
-      const colors = [...new Set(product.variants.map(v => v.color))].filter(Boolean);
-
-      el("size").innerHTML = `<option value="">Select size</option>` + sizes.map(s => `<option value="${s}">${s}</option>`).join("");
-      el("color").innerHTML = `<option value="">Select color</option>` + colors.map(c => `<option value="${c}">${c}</option>`).join("");
-
-      if (sizes[0]) el("size").value = sizes[0];
-      if (colors[0]) el("color").value = colors[0];
-
-      updateVariantFromSelections();
     }
 
     async function loadProduct() {
+      setDebug(`API_BASE: ${API_BASE}`);
+      if (!API_BASE || API_BASE.includes("YOUR-VERCEL-PROXY")) {
+        setStatus('<span class="err">API not set.</span> Replace VERCEL_PROXY with your real Vercel URL.');
+        return;
+      }
+
       setStatus("Loading product data from Printful…");
-      el("buyBtn").disabled = true;
 
       try {
-        const res = await fetch(`${API_BASE}/api/printful/product`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Failed to load product");
+        const r = await fetch(`${API_BASE}/api/printful/product`, { method: "GET" });
+        const j = await r.json().catch(() => ({}));
 
-        product = data;
+        if (!r.ok) {
+          throw new Error(j?.error || `HTTP ${r.status} from /api/printful/product`);
+        }
+
+        product = j;
 
         el("productName").textContent = product.name || "GOSHWK OG TEE";
-        el("productDesc").textContent = product.description || "Heavyweight box tee. Built for daily wear. Minimal, sharp, durable.";
+        if (product.description) el("productDesc").textContent = product.description;
 
-        // NOTE: We keep your gallery as the image source.
-        // If you want Printful to override the first image, tell me and I’ll change it.
+        // Build dropdowns from API data
+        const sizes = [...new Set(product.variants.map(v => v.size))].filter(Boolean);
+        const colors = [...new Set(product.variants.map(v => v.color))].filter(Boolean);
 
-        rebuildSelectors();
-      } catch (err) {
-        setStatus(`Couldn’t load Printful product: ${err.message}`);
+        el("size").innerHTML = `<option value="">Select size</option>` + sizes.map(s => `<option value="${s}">${s}</option>`).join("");
+        el("color").innerHTML = `<option value="">Select color</option>` + colors.map(c => `<option value="${c}">${c}</option>`).join("");
+
+        // auto select first options
+        if (sizes[0]) el("size").value = sizes[0];
+        if (colors[0]) el("color").value = colors[0];
+
+        updateVariantFromSelections();
+      } catch (e) {
+        setStatus(`<span class="err">Printful load failed.</span> ${e.message}`);
       }
     }
 
+    // Events
+    el("size").addEventListener("change", updateVariantFromSelections);
+    el("color").addEventListener("change", updateVariantFromSelections);
+    el("refreshBtn").addEventListener("click", loadProduct);
+
     // Start
     initGallery();
+    updateVariantFromSelections();
     loadProduct();
   </script>
 </body>
 </html>
-
-
-
