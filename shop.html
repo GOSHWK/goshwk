@@ -49,7 +49,7 @@
     h1 { font-size: 26px; margin: 0 0 8px; letter-spacing:.2px; }
     .sub { color:var(--muted); margin:0 0 14px; font-size:14px; line-height:1.5; }
     label { display:block; font-size:12px; color:var(--muted); margin: 14px 0 8px; }
-    select, input, button, textarea {
+    select, input, button {
       width:100%; padding: 12px 12px; border-radius: 12px;
       border: 1px solid var(--line); background:#0f0f12; color:var(--text);
       outline:none;
@@ -67,8 +67,10 @@
     .hr { height:1px; background:var(--line); margin:16px 0; }
     .ok { color:#b7ffbf; }
     .err { color:#ffb7b7; }
+    .tiny { font-size:11px; opacity:.9; }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -118,7 +120,10 @@
           <label for="size">Size</label>
           <select id="size">
             <option value="">Select size</option>
-            <option>S</option><option>M</option><option>L</option><option>XL</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
           </select>
 
           <div class="two">
@@ -126,7 +131,8 @@
               <label for="color">Color</label>
               <select id="color">
                 <option value="">Select color</option>
-                <option>Black</option><option>White</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
               </select>
             </div>
             <div>
@@ -141,61 +147,51 @@
           <button class="btn ghost" id="refreshBtn" style="margin-top:10px;">Refresh product data</button>
 
           <div class="note" id="statusNote">Status: loading…</div>
-          <div class="note" id="debugNote" style="opacity:.9;"></div>
+          <div class="note tiny" id="debugNote"></div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // =========================
-    // 1) YOUR 3 IMAGE FILES
-    // Put them in /assets and match names EXACTLY (case sensitive)
-    // =========================
+    // ====== CONFIG: set your real local gallery images ======
     const PRODUCT_IMAGES = [
       "assets/goshwk_t_front.png",
       "assets/goshwk_t_back.png",
       "assets/goshwk_t_side.png"
     ];
 
-    // =========================
-    // 2) YOUR VERCEL PROXY DOMAIN
-    // Example: "https://goshwk-api.vercel.app"
-    // =========================
-    const VERCEL_PROXY = "goshwk-collective-1ei6tfrx0-goshwks-projects.vercel.app";
+    // ====== Helpers ======
+    function el(id) { return document.getElementById(id); }
+    function setStatus(html) { el("statusNote").innerHTML = html; }
+    function setDebug(text) { el("debugNote").textContent = text || ""; }
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[c]));
+    }
 
-    // Auto API base:
-    // - if running locally, you can point to localhost
-    // - on GitHub Pages, it will use VERCEL_PROXY
-    const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-      ? "http://localhost:3000"
-      : VERCEL_PROXY;
-
-    let product = null;
+    // ====== State ======
+    let product = null;          // expected: { name, description?, variants:[{size,color,retail_price}] }
     let selectedVariant = null;
 
-    const el = (id) => document.getElementById(id);
-
-    function setStatus(html) { el("statusNote").innerHTML = html; }
-    function setDebug(text) { el("debugNote").textContent = text; }
-
+    // ====== Gallery ======
     function initGallery() {
       const main = el("mainImage");
       const row = el("thumbRow");
       const images = PRODUCT_IMAGES.filter(Boolean);
 
       if (!images.length) {
-        main.alt = "No images set";
-        setStatus('<span class="err">Images not set.</span> Add your filenames in PRODUCT_IMAGES.');
+        setStatus('<span class="err">Images not set.</span> Add filenames to PRODUCT_IMAGES.');
         return;
       }
 
       main.src = images[0];
-      main.onerror = () => setStatus('<span class="err">Main image failed to load.</span> Check /assets path + filename case.');
+      main.onerror = () => setStatus('<span class="err">Main image failed to load.</span> Check /assets + filename case.');
 
       row.innerHTML = images.map((src, i) => `
-        <button class="thumbBtn ${i===0 ? "active" : ""}" data-src="${src}">
-          <img src="${src}" alt="Image ${i+1}">
+        <button class="thumbBtn ${i===0 ? "active" : ""}" type="button" data-src="${escapeHtml(src)}">
+          <img src="${escapeHtml(src)}" alt="Image ${i+1}">
         </button>
       `).join("");
 
@@ -203,75 +199,125 @@
         const btn = e.target.closest(".thumbBtn");
         if (!btn) return;
         const src = btn.getAttribute("data-src");
+        if (!src) return;
         main.src = src;
         [...row.querySelectorAll(".thumbBtn")].forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
       });
     }
 
+    // ====== Variant selection ======
     function updateVariantFromSelections() {
       const size = el("size").value;
       const color = el("color").value;
 
+      // Offline mode: no Printful data yet
       if (!product?.variants?.length) {
-        // no API data yet — allow pre-order only when chosen
         const ok = !!size && !!color;
         el("buyBtn").disabled = !ok;
         setStatus(ok
-          ? '<span class="ok">Ready (offline mode).</span> Printful not connected yet.'
+          ? '<span class="ok">Ready (offline mode).</span> Size + color selected.'
           : 'Pick a size + color.');
         return;
       }
 
       selectedVariant = product.variants.find(v => v.size === size && v.color === color) || null;
+
       if (selectedVariant) {
-        el("price").textContent = selectedVariant.retail_price || selectedVariant.price || "$—";
+        const raw = selectedVariant.retail_price ?? selectedVariant.price ?? null;
+        el("price").textContent = raw == null ? "$—" : (String(raw).startsWith("$") ? String(raw) : `$${raw}`);
         el("buyBtn").disabled = false;
-        setStatus(`<span class="ok">Ready.</span> ${selectedVariant.color} / ${selectedVariant.size}`);
+        setStatus(`<span class="ok">Ready.</span> ${escapeHtml(selectedVariant.color)} / ${escapeHtml(selectedVariant.size)}`);
       } else {
         el("buyBtn").disabled = true;
-        setStatus('<span class="err">Variant not found.</span> Printful sizes/colors don’t match your dropdowns.');
+        setStatus('<span class="err">Variant not found.</span> Printful options don’t match your dropdowns.');
       }
     }
 
+    // ====== Printful loader (with timeout; never hangs) ======
     async function loadProduct() {
-      setDebug(`API_BASE: ${API_BASE}`);
-      if (!API_BASE || API_BASE.includes("goshwk-collective-d1x41f2gj-goshwks-projects.vercel.app")) {
-        setStatus('<span class="err">API not set.</span> Replace VERCEL_PROXY with your real Vercel URL.');
-        return;
-      }
-
+      setDebug("Fetching /api/printful/product …");
       setStatus("Loading product data from Printful…");
 
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+
       try {
-        const r = await fetch("/api/printful/product")`, { method: "GET" });
+        const r = await fetch("/api/printful/product", {
+          method: "GET",
+          cache: "no-store",
+          headers: { "Accept": "application/json" },
+          signal: controller.signal
+        });
+
         const j = await r.json().catch(() => ({}));
 
         if (!r.ok) {
+          // IMPORTANT: "HTTP ..." is inside a string, so it can never cause a SyntaxError.
           throw new Error(j?.error || `HTTP ${r.status} from /api/printful/product`);
         }
 
-        product = j;
+        // Accept either "clean" shape OR Printful raw shape
+        // Clean: { name, description?, variants:[...] }
+        // Raw:   { code, result:[...] }  (store products list)
+        product = normalizeProduct(j);
 
         el("productName").textContent = product.name || "GOSHWK OG TEE";
         if (product.description) el("productDesc").textContent = product.description;
 
-        // Build dropdowns from API data
-        const sizes = [...new Set(product.variants.map(v => v.size))].filter(Boolean);
-        const colors = [...new Set(product.variants.map(v => v.color))].filter(Boolean);
+        // If variants exist, rebuild dropdowns from Printful
+        if (product.variants?.length) {
+          const sizes = [...new Set(product.variants.map(v => v.size))].filter(Boolean);
+          const colors = [...new Set(product.variants.map(v => v.color))].filter(Boolean);
 
-        el("size").innerHTML = `<option value="">Select size</option>` + sizes.map(s => `<option value="${s}">${s}</option>`).join("");
-        el("color").innerHTML = `<option value="">Select color</option>` + colors.map(c => `<option value="${c}">${c}</option>`).join("");
+          if (sizes.length) {
+            el("size").innerHTML = `<option value="">Select size</option>` +
+              sizes.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
+            el("size").value = sizes[0];
+          }
 
-        // auto select first options
-        if (sizes[0]) el("size").value = sizes[0];
-        if (colors[0]) el("color").value = colors[0];
+          if (colors.length) {
+            el("color").innerHTML = `<option value="">Select color</option>` +
+              colors.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+            el("color").value = colors[0];
+          }
+        }
 
         updateVariantFromSelections();
+        setStatus('<span class="ok">Live.</span> Product data loaded.');
+        setDebug("Loaded OK.");
       } catch (e) {
-        setStatus(`<span class="err">Printful load failed.</span> ${e.message}`);
+        const msg = (e && e.name === "AbortError") ? "Timed out (12s)." : (e?.message || String(e));
+        setStatus(`<span class="err">Printful load failed.</span> ${escapeHtml(msg)}`);
+        setDebug(msg);
+        // Keep the page usable
+        updateVariantFromSelections();
+      } finally {
+        clearTimeout(timeout);
       }
     }
+
+    function normalizeProduct(apiJson) {
+      // If your API already returns the clean shape, use it.
+      if (apiJson && Array.isArray(apiJson.variants)) return apiJson;
+
+      // If your API returns Printful list: { result: [{id,name,thumbnail_url,...}] }
+      if (apiJson && Array.isArray(apiJson.result)) {
+        const first = apiJson.result[0] || {};
+        return { name: first.name || "GOSHWK OG TEE", variants: [] };
+      }
+
+      // Fallback
+      return { name: "GOSHWK OG TEE", variants: [] };
+    }
+
+    // ====== Pre-order button (safe placeholder) ======
+    el("buyBtn").addEventListener("click", () => {
+      const size = el("size").value;
+      const color = el("color").value;
+      const qty = Math.max(1, parseInt(el("qty").value || "1", 10));
+      alert(`Pre-order: GOSHWK OG TEE\nSize: ${size}\nColor: ${color}\nQty: ${qty}`);
+    });
 
     // Events
     el("size").addEventListener("change", updateVariantFromSelections);
@@ -285,7 +331,3 @@
   </script>
 </body>
 </html>
-
-
-
-
