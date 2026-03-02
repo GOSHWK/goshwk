@@ -1,125 +1,419 @@
+
+    
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shop — GOSHWK COLLECTIVE</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Shop — GOSHWK</title>
+  <style>
+    :root { --bg:#0b0b0c; --card:#121215; --muted:#a6a6ad; --text:#f4f4f6; --line:#232328; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 60px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:14px; padding: 6px 0 22px; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .dot { width:10px; height:10px; border-radius:999px; background:#fff; opacity:.9; }
+    nav { display:flex; gap:16px; color:var(--muted); font-size:14px; }
+    nav a:hover { color:var(--text); }
+
+    .grid { display:grid; grid-template-columns: 1.1fr .9fr; gap:22px; align-items:start; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .p { padding:18px; }
+
+    /* Gallery */
+    .gallery { padding: 14px; }
+    .mainMedia {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      background:#0f0f12;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .mainMedia img { width:100%; height:100%; object-fit:cover; display:block; }
+    .thumbRow { display:flex; gap:10px; margin-top:12px; }
+    .thumbBtn {
+      width: 84px;
+      aspect-ratio: 1 / 1;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#0f0f12;
+      padding:0;
+      overflow:hidden;
+      cursor:pointer;
+      opacity:.85;
+      transition: opacity .15s ease, transform .15s ease, border-color .15s ease;
+    }
+    .thumbBtn:hover { opacity: 1; transform: translateY(-1px); }
+    .thumbBtn.active { border-color:#3a3a44; opacity:1; }
+    .thumbBtn img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    h1 { font-size: 26px; margin: 0 0 8px; letter-spacing:.2px; }
+    .sub { color:var(--muted); margin:0 0 14px; font-size:14px; line-height:1.5; }
+    label { display:block; font-size:12px; color:var(--muted); margin: 14px 0 8px; }
+    select, input, button, textarea {
+      width:100%; padding: 12px 12px; border-radius: 12px;
+      border: 1px solid var(--line); background:#0f0f12; color:var(--text);
+      outline:none;
+    }
+    select:focus, input:focus, textarea:focus { border-color:#3a3a44; }
+    .two { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
+
+    .price { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding: 10px 0 0; }
+    .price strong { font-size: 22px; }
+    .pill { font-size:12px; color:#0b0b0c; background:#f4f4f6; padding:6px 10px; border-radius:999px; }
+    .btn {
+      cursor:pointer; background:#f4f4f6; color:#0b0b0c; border:none; font-weight:700;
+      padding: 13px 14px; border-radius: 14px;
+    }
+    .btn:disabled { opacity:.55; cursor:not-allowed; }
+    .ghost { background:transparent; border:1px solid var(--line); color:var(--text); font-weight:600; }
+    .note { font-size:12px; color:var(--muted); margin-top:10px; line-height:1.5; }
+    .hr { height:1px; background:var(--line); margin:16px 0; }
+
+    /* Modal */
+    .modalBack { position:fixed; inset:0; background: rgba(0,0,0,.62); display:none; align-items:center; justify-content:center; padding:18px; }
+    .modal { width:min(720px, 100%); border-radius:18px; background:var(--card); border:1px solid var(--line); overflow:hidden; }
+    .modalHead { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
+    .modalHead b { font-size:14px; letter-spacing:.3px; }
+    .x { background:transparent; border:1px solid var(--line); width:auto; padding:8px 10px; border-radius:12px; cursor:pointer; }
+    .modalBody { padding:16px; }
+    .ok { color:#b7ffbf; font-size:13px; }
+    .err { color:#ffb7b7; font-size:13px; }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="index.html">GOSHWK COLLECTIVE</a>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-    </nav>
-  </header>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="dot"></div>
+        <div>
+          <div style="font-weight:800; letter-spacing:.4px;">GOSHWK</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:2px;">Minimal drops • Heavyweight basics</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="shop.html" style="color:var(--text);">Shop</a>
+      </nav>
+    </header>
 
-  <main class="section">
-    <div class="sectionHead">
-      <h2>Shop</h2>
-      <p class="small muted">ASCENT drop — minimal preorder flow.</p>
-    </div>
-
-    <div class="grid shopGrid">
-      <article class="card product">
-        <div class="productMedia">
-          <img id="mainProductImg" class="productMain"
-               src="assets/ascent-tee-front.png"
-               alt="GOSHWK ASCENT TEE front" />
+    <div class="grid">
+      <div class="card">
+        <div class="gallery">
+          <div class="mainMedia">
+            <img id="mainImage" src="" alt="GOSHWK OG TEE">
+          </div>
+          <div class="thumbRow" id="thumbRow"></div>
         </div>
 
-        <div class="cardBody">
-          <div class="row">
-            <span class="name">ASCENT TEE</span>
-            <span class="price">$70 AUD</span>
+        <div class="p">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <div>
+              <h1 id="productName">GOSHWK OG TEE</h1>
+              <p class="sub" id="productDesc">Heavyweight box tee. Built for daily wear. Minimal, sharp, durable.</p>
+            </div>
+            <span class="pill" id="stockPill">Print-on-demand</span>
           </div>
 
-          <p class="desc muted">
-            Heavyweight. Matte finish. Built to ascend.
-          </p>
+          <div class="hr"></div>
 
-          <div class="row">
-            <label class="muted small" for="sizeSelect">Size</label>
-            <select id="sizeSelect" class="select" data-size>
-              <option>S</option>
-              <option>M</option>
-              <option>L</option>
-              <option>XL</option>
-            </select>
+          <div class="sub">
+            This item is fulfilled by Printful. Shipping + taxes are calculated from your address.
           </div>
-
-          <a class="btn" href="#"
-             id="preorderBtn"
-             data-product="ASCENT TEE"
-             data-price="$70 AUD">PREORDER</a>
-
-          <p class="small muted" style="margin:12px 0 0;">
-            Preorders are submitted via email confirmation.
-          </p>
         </div>
-      </article>
+      </div>
+
+      <div class="card">
+        <div class="p">
+          <div class="price">
+            <div style="color:var(--muted); font-size:13px;">Price</div>
+            <strong id="price">$—</strong>
+          </div>
+
+          <label for="size">Size</label>
+          <select id="size">
+            <option value="">Loading sizes…</option>
+          </select>
+
+          <div class="two">
+            <div>
+              <label for="color">Color</label>
+              <select id="color">
+                <option value="">Loading colors…</option>
+              </select>
+            </div>
+            <div>
+              <label for="qty">Quantity</label>
+              <input id="qty" type="number" min="1" value="1" />
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <button class="btn" id="buyBtn" disabled>Pre-order</button>
+          <button class="btn ghost" id="refreshBtn" style="margin-top:10px;">Refresh product data</button>
+
+          <div class="note" id="statusNote">Loading product data from Printful…</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <p class="small muted" style="max-width:920px;margin:18px auto 0;">
-      Palette: deep black/charcoal, bone/off-white, concrete grey, muted olive.
-      Controlled orange/yellow accents only. Matte only.
-    </p>
-  </main>
+  <!-- Modal -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <b>Checkout — GOSHWK OG TEE</b>
+        <button class="x" id="closeModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <div class="two">
+          <div>
+            <label for="fullName">Full name</label>
+            <input id="fullName" placeholder="Spencer Johnstone" />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@email.com" />
+          </div>
+        </div>
 
-  <footer class="footer">
-    <span class="muted">© <span id="year"></span> GOSHWK COLLECTIVE</span>
-    <span class="muted">ASCENT &gt; COMFORT</span>
-  </footer>
+        <label for="address1">Address line 1</label>
+        <input id="address1" placeholder="123 Street Name" />
+
+        <label for="address2">Address line 2 (optional)</label>
+        <input id="address2" placeholder="Apt, suite, etc." />
+
+        <div class="two">
+          <div>
+            <label for="city">City</label>
+            <input id="city" placeholder="Sydney" />
+          </div>
+          <div>
+            <label for="state">State/Region</label>
+            <input id="state" placeholder="NSW" />
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label for="zip">Postcode</label>
+            <input id="zip" placeholder="2000" />
+          </div>
+          <div>
+            <label for="country">Country code (2 letters)</label>
+            <input id="country" value="AU" />
+          </div>
+        </div>
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" rows="3" placeholder="Anything we should know…"></textarea>
+
+        <div class="hr"></div>
+
+        <button class="btn" id="placeOrderBtn">Create order</button>
+        <div class="note" id="orderMsg"></div>
+        <div class="note" style="margin-top:12px;">
+          This creates a <b>draft order</b> in Printful. You can review and confirm it in your Printful dashboard.
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // ====== SETTINGS (edit this) ======
-    const EMAIL_TO = "spencer.j.johnstone@gmail.com"; // <-- change to your email
+    // =========================
+    // 1) SET YOUR IMAGE FILES
+    // =========================
+    // Put your 3 images inside /assets and set the filenames below:
+    const PRODUCT_IMAGES = [
+      "assets/IMAGE_1_HERE.jpg",
+      "assets/IMAGE_2_HERE.jpg",
+      "assets/IMAGE_3_HERE.jpg"
+    ];
 
-    // ====== Footer year ======
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // =========================
+    // 2) SET YOUR VERCEL API URL
+    // =========================
+    const API_BASE = "https://goshwk-collective.vercel.app/shop.html";
 
-    // ====== Image switcher (front/back) ======
-    const mainImg = document.getElementById("mainProductImg");
-    const thumbs = document.querySelectorAll(".thumb");
-    thumbs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        thumbs.forEach(t => t.classList.remove("isActive"));
-        btn.classList.add("isActive");
-        mainImg.src = btn.dataset.img;
-      });
-    });
+    let product = null;
+    let selectedVariant = null;
 
-    // ====== Preorder mailto (FREE checkout method) ======
-    function buildMailto(product, price, size) {
-      const subject = encodeURIComponent(`Preorder — ${product} (${size})`);
-      const body = encodeURIComponent(
-`Product: ${product}
-Size: ${size}
-Price: ${price}
+    const el = (id) => document.getElementById(id);
 
-Name:
-Shipping Address:
-Phone:
-
-Notes:`
-      );
-      return `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
+    function money(n, currency="USD") {
+      if (typeof n !== "number") return "—";
+      try { return new Intl.NumberFormat(undefined, { style:"currency", currency }).format(n); }
+      catch { return `$${n.toFixed(2)}`; }
     }
 
-    document.getElementById("preorderBtn").addEventListener("click", (e) => {
-      e.preventDefault();
-      const product = e.currentTarget.getAttribute("data-product") || "Item";
-      const price = e.currentTarget.getAttribute("data-price") || "";
-      const size = document.querySelector("[data-size]")?.value || "One Size";
-      window.location.href = buildMailto(product, price, size);
+    function setStatus(text) { el("statusNote").textContent = text; }
+
+    // Gallery init
+    function initGallery() {
+      const main = el("mainImage");
+      const row = el("thumbRow");
+
+      const images = PRODUCT_IMAGES.filter(Boolean);
+      if (!images.length) return;
+
+      main.src = images[0];
+
+      row.innerHTML = images.map((src, i) => `
+        <button class="thumbBtn ${i===0 ? "active" : ""}" data-src="${src}" aria-label="View image ${i+1}">
+          <img src="${src}" alt="GOSHWK OG TEE image ${i+1}">
+        </button>
+      `).join("");
+
+      row.addEventListener("click", (e) => {
+        const btn = e.target.closest(".thumbBtn");
+        if (!btn) return;
+        const src = btn.getAttribute("data-src");
+        if (!src) return;
+
+        main.src = src;
+        [...row.querySelectorAll(".thumbBtn")].forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    }
+
+    function openModal() { el("modalBack").style.display = "flex"; }
+    function closeModal() { el("modalBack").style.display = "none"; el("orderMsg").textContent = ""; }
+
+    el("closeModal").addEventListener("click", closeModal);
+    el("modalBack").addEventListener("click", (e) => { if (e.target === el("modalBack")) closeModal(); });
+
+    el("refreshBtn").addEventListener("click", () => loadProduct());
+    el("size").addEventListener("change", () => updateVariantFromSelections());
+    el("color").addEventListener("change", () => updateVariantFromSelections());
+
+    el("buyBtn").addEventListener("click", () => {
+      if (!selectedVariant) return;
+      openModal();
     });
+
+    el("placeOrderBtn").addEventListener("click", async () => {
+      const qty = Math.max(1, parseInt(el("qty").value || "1", 10));
+      if (!selectedVariant) return;
+
+      const payload = {
+        variant_id: selectedVariant.variant_id,
+        quantity: qty,
+        recipient: {
+          name: el("fullName").value.trim(),
+          email: el("email").value.trim(),
+          address1: el("address1").value.trim(),
+          address2: el("address2").value.trim(),
+          city: el("city").value.trim(),
+          state_code: el("state").value.trim(),
+          zip: el("zip").value.trim(),
+          country_code: el("country").value.trim().toUpperCase(),
+        },
+        notes: el("notes").value.trim()
+      };
+
+      const required = ["name","email","address1","city","zip","country_code"];
+      for (const k of required) {
+        if (!payload.recipient[k]) {
+          el("orderMsg").innerHTML = `<span class="err">Missing ${k.replace("_"," ")}.</span>`;
+          return;
+        }
+      }
+
+      el("placeOrderBtn").disabled = true;
+      el("orderMsg").textContent = "Creating order…";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/printful/create-draft-order`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Order failed");
+
+        el("orderMsg").innerHTML =
+          `<span class="ok">Draft order created.</span> ` +
+          (data.order_url ? `Open in Printful: <a href="${data.order_url}" target="_blank" rel="noreferrer" style="text-decoration:underline;">Order #${data.order_id}</a>` : `Order ID: ${data.order_id}`);
+
+      } catch (err) {
+        el("orderMsg").innerHTML = `<span class="err">${err.message}</span>`;
+      } finally {
+        el("placeOrderBtn").disabled = false;
+      }
+    });
+
+    function updateVariantFromSelections() {
+      if (!product?.variants?.length) return;
+
+      const size = el("size").value;
+      const color = el("color").value;
+
+      selectedVariant = product.variants.find(v => v.size === size && v.color === color) || null;
+
+      if (selectedVariant) {
+        el("price").textContent = money(selectedVariant.retail_price ?? selectedVariant.price ?? null, selectedVariant.currency || "USD");
+        el("buyBtn").disabled = false;
+        setStatus(`Ready — ${selectedVariant.color} / ${selectedVariant.size}`);
+      } else {
+        el("buyBtn").disabled = true;
+        setStatus("Pick a size + color.");
+      }
+    }
+
+    function rebuildSelectors() {
+      const sizes = [...new Set(product.variants.map(v => v.size))].filter(Boolean);
+      const colors = [...new Set(product.variants.map(v => v.color))].filter(Boolean);
+
+      el("size").innerHTML = `<option value="">Select size</option>` + sizes.map(s => `<option value="${s}">${s}</option>`).join("");
+      el("color").innerHTML = `<option value="">Select color</option>` + colors.map(c => `<option value="${c}">${c}</option>`).join("");
+
+      if (sizes[0]) el("size").value = sizes[0];
+      if (colors[0]) el("color").value = colors[0];
+
+      updateVariantFromSelections();
+    }
+
+    async function loadProduct() {
+      setStatus("Loading product data from Printful…");
+      el("buyBtn").disabled = true;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/printful/product`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Failed to load product");
+
+        product = data;
+
+        el("productName").textContent = product.name || "GOSHWK OG TEE";
+        el("productDesc").textContent = product.description || "Heavyweight box tee. Built for daily wear. Minimal, sharp, durable.";
+
+        // NOTE: We keep your gallery as the image source.
+        // If you want Printful to override the first image, tell me and I’ll change it.
+
+        rebuildSelectors();
+      } catch (err) {
+        setStatus(`Couldn’t load Printful product: ${err.message}`);
+      }
+    }
+
+    // Start
+    initGallery();
+    loadProduct();
   </script>
 </body>
-
 </html>
-
-
 
 
 
