@@ -90,7 +90,7 @@
       <div class="card">
         <div class="gallery">
           <div class="mainMedia">
-            <img id="mainImage" src="assets/IMAGE_HERE_1.jpeg" alt="GOSHWK OG TEE">
+            <img id="mainImage" src="assets/IMAGE_1_HERE.jpeg" alt="GOSHWK OG TEE">
           </div>
           <div class="thumbRow" id="thumbRow"></div>
         </div>
@@ -244,7 +244,7 @@
       setStatus("Loading product data from Printful…");
 
       try {
-        const r = await fetch(`${API_BASE}/api/printful/product`, { method: "GET" });
+        const r = await fetch("/api/printful/product")`, { method: "GET" });
         const j = await r.json().catch(() => ({}));
 
         if (!r.ok) {
@@ -285,4 +285,5 @@
   </script>
 </body>
 </html>
+
 
