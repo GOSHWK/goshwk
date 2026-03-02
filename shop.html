@@ -90,7 +90,7 @@
       <div class="card">
         <div class="gallery">
           <div class="mainMedia">
-            <img id="mainImage" src="" alt="GOSHWK OG TEE">
+            <img id="mainImage" src="assets/IMAGE_HERE_1.jpeg" alt="GOSHWK OG TEE">
           </div>
           <div class="thumbRow" id="thumbRow"></div>
         </div>
@@ -236,7 +236,7 @@
 
     async function loadProduct() {
       setDebug(`API_BASE: ${API_BASE}`);
-      if (!API_BASE || API_BASE.includes("YOUR-VERCEL-PROXY")) {
+      if (!API_BASE || API_BASE.includes("goshwk-collective-d1x41f2gj-goshwks-projects.vercel.app")) {
         setStatus('<span class="err">API not set.</span> Replace VERCEL_PROXY with your real Vercel URL.');
         return;
       }
@@ -285,3 +285,4 @@
   </script>
 </body>
 </html>
+
